@@ -6,8 +6,17 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 # pyrefly: ignore [import-error]
 from typing import Optional, List, Dict, Set
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="AI Interview Agent")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For production, replace with the specific Vercel URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class InterviewRequest(BaseModel):
     sessionId: str
