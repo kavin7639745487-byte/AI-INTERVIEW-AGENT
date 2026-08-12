@@ -10,9 +10,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="AI Interview Agent")
 
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For production, replace with the specific Vercel URL
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -238,3 +240,9 @@ def interview(request: InterviewRequest):
     session["history"].append({"role": "agent", "content": reply})
     
     return InterviewResponse(reply=reply, done=False)
+
+if __name__ == "__main__":
+    import uvicorn
+    # Bind to PORT if set by the environment (e.g. Railway), default to 8000
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
