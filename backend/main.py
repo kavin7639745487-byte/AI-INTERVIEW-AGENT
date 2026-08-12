@@ -2,6 +2,7 @@ import json
 import os
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 # pyrefly: ignore [missing-import]
 from pydantic import BaseModel
 # pyrefly: ignore [import-error]
@@ -9,6 +10,15 @@ from typing import Optional, List, Dict, Set
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="AI Interview Agent")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://ai-interview-agent-gyyc-pst6a97q9-alpha-33cc.vercel.app"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
 
@@ -245,4 +255,4 @@ if __name__ == "__main__":
     import uvicorn
     # Bind to PORT if set by the environment (e.g. Railway), default to 8000
     port = int(os.getenv("PORT", "8000"))
-    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
